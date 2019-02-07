@@ -1,4 +1,6 @@
-const JSONFetch = {}
+const JSONFetch = {
+    configurations: {}
+}
 
 /**
  * @typedef {Object} Configurations
