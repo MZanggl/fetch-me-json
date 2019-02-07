@@ -1,0 +1,24 @@
+{
+  "name": "fetch-me-json",
+  "version": "1.0.0",
+  "description": "High level fetch API",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MZanggl/fetch-me-json.git"
+  },
+  "keywords": [
+    "json",
+    "fetch",
+    "client"
+  ],
+  "author": "Michael Zanggl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MZanggl/fetch-me-json/issues"
+  },
+  "homepage": "https://github.com/MZanggl/fetch-me-json#readme"
+}
