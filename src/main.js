@@ -98,4 +98,4 @@ function _withQuery(url, parameters) {
     }, url)
 }
 
-export default JSONFetch
+module.exports = JSONFetch
