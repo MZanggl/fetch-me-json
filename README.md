@@ -61,7 +61,7 @@ JSONFetch.patch('/resources/1', {
 
 ### internal fetch
 
-Internally this is the fetch that will be executed for everyting except for `GET`. You can configure these to your liking (see below).
+Internally these are the fetch options that will be used for everyting except for `GET`. You can configure these to your liking (see below).
 
 ```javascript
 {
@@ -95,3 +95,9 @@ List of possible configurations
 | errorKey | The key (from the response) that should be thrown in the case of an error | message  |
 | defaultParameters  | define default parameters you always want to pass along  |   |
 | fetch  | parameters to be passed down to the global fetch method (except for get), overrides existing parameters  | *see **internal fetch** above* |
+
+### Differences to native fetch
+- uses and accepts JSON by default
+- throws an error when response is not ok
+
+If you need to support [older browsers](https://caniuse.com/#search=fetch) be sure to include the [polyfill](https://github.com/github/fetch).
