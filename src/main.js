@@ -1,101 +1,67 @@
+const withQuery = require('with-query').default
+
 const JSONFetch = {
-    configurations: {}
+    configurations: {},
+    config(configurations = {}) {
+        this.configurations.fetch = configurations.fetch || {}
+        this.configurations.defaultPayload = configurations.defaultPayload || {}
+        this.configurations.errorKey = configurations.errorKey || 'message'
+    }
 }
 
-/**
- * @typedef {Object} Configurations
- * @property {Object} fetch parameters to be passed down to the global fetch method (not get), overrides existing parameters
- * @property {Object} defaultParameters define default parameters you always want to pass along
- * @property {String} errorKey default to `message`. In the case of an error what key should be thrown
- */
+// initialize with default options
+JSONFetch.config()
 
-/**
- * @param {Configurations} configurations
- */
-JSONFetch.config = configurations => JSONFetch.configurations = configurations
+const methods = ['get', 'head', 'post', 'put', 'patch', 'delete', 'options']
+methods.forEach(method => {
+    JSONFetch[method] = async (url, payload = {}) => await send({ method, url, payload })
+})
 
-/**
- * High level API for fetch's GET request. 
- * @param {string} url 
- * @param {object} parameters 
- */
-JSONFetch.get = async (url, parameters = {}) => {
-    if (JSONFetch.configurations.defaultParameters){
-        parameters = {...JSONFetch.configurations.defaultParameters, ...parameters}
-    }
-
-    const urlWithQuery = _withQuery(url, parameters)
-    const response = await fetch(urlWithQuery)
-    const body = await response.json()
-
-    if (!response.ok) throw Error(body.message)
-
-    return body
+async function send(parameters) {
+    parameters = transformParameters(parameters)
+    const fetchParameters = getFetchParameters(parameters.method, parameters.payload)
+    const response = await fetch(parameters.url, fetchParameters)
+    return await parseResponseOrFail(response)
 }
 
-/**
- * High level API for fetch's PUT request. 
- * @param {string} url 
- * @param {object} parameters 
- */
-JSONFetch.put = async (url, parameters = {}) => await _send(url, 'put', parameters)
+function isGet(method) {
+    return ['get', 'head'].includes(method)
+}
 
-/**
- * High level API for fetch's POST request. 
- * @param {string} url 
- * @param {object} parameters 
- */
-JSONFetch.post = async (url, parameters = {}) => await _send(url, 'post', parameters)
-
-/**
- * High level API for fetch's DELETE request. 
- * @param {string} url 
- * @param {object} parameters 
- */
-JSONFetch.delete = async (url, parameters = {}) => await _send(url, 'delete', parameters)
-
-/**
- * High level API for fetch's PATCH request. 
- * @param {string} url 
- * @param {object} parameters 
- */
-JSONFetch.patch = async (url, parameters = {}) => await _send(url, 'patch', parameters)
-
-async function _send(url, method, parameters = {}) {
-    if (JSONFetch.configurations.defaultParameters){
-        parameters = {...JSONFetch.configurations.defaultParameters, ...parameters}
+function transformParameters(parameters) {
+    if (Object.keys(JSONFetch.configurations.defaultPayload).length > 0) {
+        parameters.payload = {...JSONFetch.configurations.defaultPayload, ...parameters.payload}
     }
 
-    const overrideFetchParameters = JSONFetch.configurations.fetch || {}
-    const fetchParameters = {
+    if (isGet(parameters.method)) {
+        parameters.url = withQuery(parameters.url, parameters.payload)
+    }
+
+    return parameters
+}
+
+function getFetchParameters(method, payload) {
+    return {
         method,
-        body: JSON.stringify(parameters),
+        body: isGet(method) ? null : JSON.stringify(payload),
         mode: 'same-origin',
         credentials: 'same-origin',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        ...overrideFetchParameters
+        ...JSONFetch.configurations.fetch
     }
+}
 
-    const response = await fetch(url, fetchParameters)
-
-    const body = await response.json().catch(() => {}) // if no response, avoid crash by falling back to empty Object
+async function parseResponseOrFail(response) {
+    const body = await response.json().catch(() => {}) // if no response, avoid crashing by falling back to empty Object
 
     if (!response.ok) {
-        const errorKey = JSONFetch.configurations.errorKey || 'message'
-        throw Error(body[errorKey] || 'internal server error')
+        throw Error(body[JSONFetch.configurations.errorKey] || 'internal server error')
     }
 
     return body
-}
-
-function _withQuery(url, parameters) {
-    return Object.keys(parameters).reduce((fullUrl, key) => {
-        const seperator = fullUrl.includes('?') ? '&' : '?'
-        return `${fullUrl}${seperator}${key}=${parameters[key] || ''}`
-    }, url)
 }
 
 module.exports = JSONFetch

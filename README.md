@@ -12,7 +12,7 @@
 ```
 import JSONFetch from 'fetch-me-json'
 
-JSONFetch.<<method>>(<<endpoint>>, <<parameters>>)
+JSONFetch.<<method>>(<<endpoint>>, <<JSON-payload>>)
     .then(<<JSON-ResponseBody>> => ...)
     .catch(<<errorMessage>> => ...)
 ```
@@ -61,12 +61,10 @@ JSONFetch.patch('/resources/1', {
 
 ### internal fetch
 
-Internally these are the fetch options that will be used for everyting except for `GET`. You can configure these to your liking (see below).
+These are the internal fetch options that will be applied. You can configure these to your liking (see below).
 
 ```javascript
 {
-    method: 'put' | 'post' | 'patch' | 'delete'
-    body: JSON.stringify(parameters),
     mode: 'same-origin',
     credentials: 'same-origin',
     headers: {
@@ -93,7 +91,7 @@ List of possible configurations
 | key  | description | default | 
 |---|---|---|
 | errorKey | The key (from the response) that should be thrown in the case of an error | message  |
-| defaultParameters  | define default parameters you always want to pass along  |   |
+| defaultPayload  | define default payload you always want to pass along  |   |
 | fetch  | parameters to be passed down to the global fetch method (except for get), overrides existing parameters  | *see **internal fetch** above* |
 
 ### Differences to native fetch

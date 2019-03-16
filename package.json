@@ -1,10 +1,29 @@
 {
   "name": "fetch-me-json",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "High level fetch API",
-  "main": "src/main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "node node_modules/@babel/cli/bin/babel.js src --out-dir dist",
+    "test": "mocha"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "browsers": [
+              "last 4 versions"
+            ]
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-transform-runtime"
+    ]
   },
   "repository": {
     "type": "git",
@@ -20,5 +39,18 @@
   "bugs": {
     "url": "https://github.com/MZanggl/fetch-me-json/issues"
   },
-  "homepage": "https://github.com/MZanggl/fetch-me-json#readme"
+  "homepage": "https://github.com/MZanggl/fetch-me-json#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.3.4",
+    "with-query": "^1.1.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
+  }
 }
