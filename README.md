@@ -99,3 +99,16 @@ List of possible configurations
 - throws an error when response is not ok
 
 If you need to support [older browsers](https://caniuse.com/#search=fetch) be sure to include the [polyfill](https://github.com/github/fetch).
+
+### Catching the response status code
+JSONFetch returns a custom `HttpError` object with a `status` property that you can make use of.
+
+```javascript
+import JSONFetch from 'fetch-me-json'
+
+JSONFetch.get('/resource').catch(error => {
+    if (error instanceof JSONFetch.HttpError) {
+        console.log(error.status)
+    }
+})
+```

@@ -166,4 +166,16 @@ describe('throws', () => {
             })
         })
     })
+
+    it('should throw custom HTTPError', async function () {
+        const fetchSpy = new FetchSpyFactory({ ok: false, body: { message: 'test' }, status: 404 })
+
+        return await fetchSpy(() => {
+            return JSONFetch.get('/search').catch(e => {
+                expect(e.message).to.equal('test')
+                expect(e).to.be.instanceOf(JSONFetch.HttpError)
+                expect(e.status).to.equal(404)
+            })
+        })
+    })
 })
