@@ -4,7 +4,8 @@
   "description": "High level fetch API",
   "main": "dist/main.js",
   "scripts": {
-    "prepublish": "node node_modules/@babel/cli/bin/babel.js src --out-dir dist",
+    "prepublish": "npm run compile",
+    "compile": "node node_modules/@babel/cli/bin/babel.js src --out-dir dist",
     "test": "mocha"
   },
   "babel": {

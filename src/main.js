@@ -55,7 +55,7 @@ function getFetchParameters(method, payload) {
 }
 
 async function parseResponseOrFail(response) {
-    const body = await response.json().catch(() => {}) // if no response, avoid crashing by falling back to empty Object
+    const body = await response.json().catch(() => ({ })) || {} // if no response, avoid crashing by falling back to empty Object
 
     if (!response.ok) {
         throw Error(body[JSONFetch.configurations.errorKey] || 'internal server error')

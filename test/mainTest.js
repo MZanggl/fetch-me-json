@@ -156,4 +156,14 @@ describe('throws', () => {
             })
         })
     })
+
+    it('should throw "internal server error" from failed response when response is not json', async function () {
+        const fetchSpy = new FetchSpyFactory({ ok: false, body: null })
+
+        return await fetchSpy(() => {
+            return JSONFetch.get('/search').catch(e => {
+                expect(e.message).to.equal('internal server error')
+            })
+        })
+    })
 })
