@@ -1,13 +1,13 @@
 module.exports = class FetchSpyFactory {
 
-    constructor(options = {}) {
-        if (!options.hasOwnProperty('fakeJSONResponse')) options.fakeJSONResponse = {}
-        if (!options.hasOwnProperty('ok')) options.ok = true
+    constructor(fakeResponse = {}) {
+        if (!fakeResponse.hasOwnProperty('body')) fakeResponse.body = {}
+        if (!fakeResponse.hasOwnProperty('ok')) fakeResponse.ok = true
     
         let fetchResponse = {}
         global.fetch = async (endpoint, parameters = {}) => {
             return {
-                ok: options.ok,
+                ok: fakeResponse.ok,
                 async json() {
                     fetchResponse = {
                         meta: {
@@ -17,7 +17,7 @@ module.exports = class FetchSpyFactory {
                     }
         
                     // return dummy data
-                    return options.fakeJSONResponse
+                    return fakeResponse.body
                 }
             }
         }

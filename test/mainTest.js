@@ -58,17 +58,16 @@ describe('configurations', function () {
         expect(fetchResponse.meta.parameters.credentials).to.equal('include')
     })
 
+    // doesnt work
     it('should throw custom configured error key from failed response', async function () {
-        const fetchSpy = new FetchSpyFactory({ ok: false, fakeJSONResponse: {
+        const fetchSpy = new FetchSpyFactory({ ok: false, body: {
             error: 'test'
-        } })
+        }})
 
-        JSONFetch.config({
-            errorKey: 'error'
-        })
+        JSONFetch.config({ errorKey: 'error' })
 
-        await fetchSpy(() => {
-            JSONFetch.get('/search').catch(e => {
+        return await fetchSpy(() => {
+            return JSONFetch.get('/search').catch(e => {
                 expect(e.message).to.equal('test')
             })
         })
@@ -138,8 +137,8 @@ describe('throws', () => {
     it('should throw error when response is not ok', async function () {
         const fetchSpy = new FetchSpyFactory({ ok: false })
 
-        await fetchSpy(() => {
-            JSONFetch.get('/search').catch(e => {
+        return await fetchSpy(() => {
+            return JSONFetch.get('/search').catch(e => {
                 expect(e).to.be.instanceOf(Error)
             })
         })
@@ -147,12 +146,12 @@ describe('throws', () => {
     })
 
     it('should throw error key from failed response', async function () {
-        const fetchSpy = new FetchSpyFactory({ ok: false, fakeJSONResponse: {
+        const fetchSpy = new FetchSpyFactory({ ok: false, body: {
             message: 'test'
         } })
 
-        await fetchSpy(() => {
-            JSONFetch.get('/search').catch(e => {
+        return await fetchSpy(() => {
+            return JSONFetch.get('/search').catch(e => {
                 expect(e.message).to.equal('test')
             })
         })
