@@ -92,7 +92,7 @@ List of possible configurations
 |---|---|---|
 | errorKey | The key (from the response) that should be thrown in the case of an error | message  |
 | defaultPayload  | define default payload you always want to pass along  |   |
-| fetch  | parameters to be passed down to the global fetch method (except for get), overrides existing parameters  | *see **internal fetch** above* |
+| fetch  | parameters to be passed down to the global fetch method, overrides default parameters  | *see **internal fetch** above* |
 
 ### Differences to native fetch
 - uses and accepts JSON by default
