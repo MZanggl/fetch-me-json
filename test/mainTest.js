@@ -175,6 +175,7 @@ describe('throws', () => {
                 expect(e.message).to.equal('test')
                 expect(e).to.be.instanceOf(JSONFetch.HttpError)
                 expect(e.status).to.equal(404)
+                expect(e.name).to.equal('HttpError')
             })
         })
     })

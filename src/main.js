@@ -3,7 +3,7 @@ const withQuery = require('with-query').default
 class HttpError extends Error {
     constructor(message, status) {
         super(message);
-        this.name = this.constructor.name;
+        this.name = 'HttpError';
         this.status = status
     }
 }
@@ -34,7 +34,7 @@ async function send(parameters) {
 }
 
 function isGet(method) {
-    return ['get', 'head'].includes(method)
+    return ['get', 'head'].indexOf(method) >= 0
 }
 
 function transformParameters(parameters) {
