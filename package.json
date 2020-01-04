@@ -1,6 +1,6 @@
 {
   "name": "fetch-me-json",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "High level fetch API",
   "main": "dist/main.js",
   "scripts": {
