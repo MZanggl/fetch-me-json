@@ -90,7 +90,7 @@ List of possible configurations
 
 | key  | description | default | 
 |---|---|---|
-| errorKey | The key (from the response) that should be thrown in the case of an error | message  |
+| errorKey | The key (from the response) that should be thrown in the case of an error. Pass null to throw entire response | message  |
 | defaultPayload  | define default payload you always want to pass along  |   |
 | fetch  | parameters to be passed down to the global fetch method, overrides default parameters  | *see **internal fetch** above* |
 

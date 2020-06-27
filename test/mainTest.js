@@ -58,7 +58,6 @@ describe('configurations', function () {
         expect(fetchResponse.meta.parameters.credentials).to.equal('include')
     })
 
-    // doesnt work
     it('should throw custom configured error key from failed response', async function () {
         const fetchSpy = new FetchSpyFactory({ ok: false, body: {
             error: 'test'
@@ -176,6 +175,18 @@ describe('throws', () => {
                 expect(e).to.be.instanceOf(JSONFetch.HttpError)
                 expect(e.status).to.equal(404)
                 expect(e.name).to.equal('HttpError')
+            })
+        })
+    })
+
+    it('should throw entire body when error key is not given', async function () {
+        const fetchSpy = new FetchSpyFactory({ ok: false, body: { message: 'test' }, status: 404 })
+
+        JSONFetch.config({ errorKey: null })
+
+        return await fetchSpy(() => {
+            return JSONFetch.get('/search').catch(e => {
+                expect(e.message).to.deep.equal({ message: 'test' })
             })
         })
     })

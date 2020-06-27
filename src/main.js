@@ -3,6 +3,7 @@ const withQuery = require('with-query').default
 class HttpError extends Error {
     constructor(message, status) {
         super(message);
+        this.message = message // super stringifies message
         this.name = 'HttpError';
         this.status = status
     }
@@ -14,7 +15,7 @@ const JSONFetch = {
     config(configurations = {}) {
         this.configurations.fetch = configurations.fetch || {}
         this.configurations.defaultPayload = configurations.defaultPayload || {}
-        this.configurations.errorKey = configurations.errorKey || 'message'
+        this.configurations.errorKey = typeof configurations.errorKey !== 'undefined' ? configurations.errorKey : 'message'
     },
 }
 
@@ -67,7 +68,8 @@ async function parseResponseOrFail(response) {
     const body = await response.json().catch(() => ({ })) || {} // if no response, avoid crashing by falling back to empty Object
 
     if (!response.ok) {
-        throw new HttpError(body[JSONFetch.configurations.errorKey] || 'internal server error', response.status)
+        const error = JSONFetch.configurations.errorKey ? body[JSONFetch.configurations.errorKey] : body
+        throw new HttpError(error || 'internal server error', response.status)
     }
 
     return body
