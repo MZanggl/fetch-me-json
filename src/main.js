@@ -13,6 +13,7 @@ const JSONFetch = {
     configurations: {},
     HttpError,
     config(configurations = {}) {
+        this.configurations.baseURL = configurations.baseURL || null
         this.configurations.fetch = configurations.fetch || {}
         this.configurations.defaultPayload = configurations.defaultPayload || {}
         this.configurations.errorKey = typeof configurations.errorKey !== 'undefined' ? configurations.errorKey : 'message'
@@ -39,15 +40,26 @@ function isGet(method) {
 }
 
 function transformParameters(parameters) {
+    let { payload, url } = parameters
+    let baseURL = JSONFetch.configurations.baseURL
+
     if (Object.keys(JSONFetch.configurations.defaultPayload).length > 0) {
-        parameters.payload = {...JSONFetch.configurations.defaultPayload, ...parameters.payload}
+        payload = {...JSONFetch.configurations.defaultPayload, ...payload}
     }
 
     if (isGet(parameters.method)) {
-        parameters.url = withQuery(parameters.url, parameters.payload)
+        url = withQuery(url, payload)
     }
 
-    return parameters
+    if (baseURL) {
+        if (url) {
+            if (!baseURL.endsWith('/')) baseURL += '/'
+            if (url.startsWith('/')) url = url.substring(1)
+        }
+        url = baseURL + url
+    }
+
+    return { ...parameters, url, payload }
 }
 
 function getFetchParameters(method, payload) {

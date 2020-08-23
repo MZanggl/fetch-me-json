@@ -129,6 +129,31 @@ describe('fetch', function () {
         })
     })
 
+    it('should apply baseURL from configurations', async function () {
+        const fetchSpy = new FetchSpyFactory()
+        const expectation = 'http://localhost:3000/api/artist'
+
+        let fetchResponse = await fetchSpy(() => {
+            JSONFetch.config({ baseURL: 'http://localhost:3000/api' })
+            JSONFetch.post('/artist', { name: 'nujabes' })
+        })
+
+        expect(fetchResponse.meta.endpoint).to.equal(expectation)
+
+        fetchResponse = await fetchSpy(() => {
+            JSONFetch.config({ baseURL: 'http://localhost:3000/api/' })
+            JSONFetch.post('/artist', { name: 'nujabes' })
+        })
+
+        expect(fetchResponse.meta.endpoint).to.equal(expectation)
+
+        fetchResponse = await fetchSpy(() => {
+            JSONFetch.config({ baseURL: 'http://localhost:3000/api' })
+            JSONFetch.post('artist', { name: 'nujabes' })
+        })
+
+        expect(fetchResponse.meta.endpoint).to.equal(expectation)
+    })
     
 })
 
